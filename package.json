@@ -1,45 +1,45 @@
 {
-  "name": "to-mock",
-  "version": "0.0.1",
-  "description": "",
-  "main": "toMock.js",
-  "scripts": {
-    "test": "node_modules/.bin/ava"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mjancarik/to-mock.git"
-  },
-  "keywords": [
-    "mock",
-    "unit",
-    "tests",
-    "integration",
-    "test",
-    "ES6",
-    "class",
-    "Object"
-  ],
-  "publishConfig": {
-    "registry": "http://registry.npmjs.org/"
-  },
-  "author": "Miroslav Jancarik",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mjancarik/to-mock/issues"
-  },
-  "homepage": "https://github.com/mjancarik/to-mock#readme",
-  "devDependencies": {
-    "ava": "^0.18.2",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.23.0",
-    "coveralls": "^2.12.0",
-    "nyc": "^10.1.2"
-  },
-  "ava": {
-    "babel": {
-      "plugins": [
-        "transform-es2015-modules-commonjs"
-      ]
-    }
-  }
+	"name": "to-mock",
+	"version": "0.0.1",
+	"description": "The utility for creating mocked classes and objects which you can use for your unit tests",
+	"main": "toMock.js",
+	"scripts": {
+		"test": "node_modules/.bin/ava"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mjancarik/to-mock.git"
+	},
+	"keywords": [
+		"mock",
+		"unit",
+		"tests",
+		"integration",
+		"test",
+		"ES6",
+		"class",
+		"Object"
+	],
+	"publishConfig": {
+		"registry": "http://registry.npmjs.org/"
+	},
+	"author": "Miroslav Jancarik",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/mjancarik/to-mock/issues"
+	},
+	"homepage": "https://github.com/mjancarik/to-mock#readme",
+	"devDependencies": {
+		"ava": "^0.18.2",
+		"babel-plugin-transform-es2015-modules-commonjs": "^6.23.0",
+		"coveralls": "^2.12.0",
+		"nyc": "^10.1.2"
+	},
+	"ava": {
+		"babel": {
+			"plugins": [
+				"transform-es2015-modules-commonjs"
+			]
+		}
+	}
 }
