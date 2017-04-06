@@ -29,25 +29,35 @@ let myObject = {
 };
 
 test.beforeEach((t) => {
+	t.context.MyClass = MyClass;
+	t.context.myObject = myObject;
 	t.context.MockedMyClass = toMock(MyClass);
 	t.context.MockedDate = toMock(Date);
 	t.context.mockedMyObject = toMock(myObject);
 })
 
-test('mocked class is not throw error for creating new instance of it', t => {
+test('the mocked class is not throw error for creating new instance of it', t => {
 	t.notThrows(() => {
 		Reflect.construct(t.context.MockedMyClass, []);
 	});
 });
 
-test('mocked class is instance of provided class', t => {
+test('the mocked class is instance of provided class', t => {
 	let instance = Reflect.construct(t.context.MockedMyClass, []);
 
 	t.truthy(instance instanceof MyClass);
 	t.truthy(instance instanceof Dummy);
 });
 
-test('class mocked method is not throw error', t => {
+test('The original prototype chain is not modified', t => {
+	t.truthy(t.context.MyClass.prototype.method.name === 'method');
+});
+
+test('The mocked prototype chain is modified', t => {
+	t.truthy(t.context.MockedMyClass.prototype.method.name === 'mockMethod');
+});
+
+test('the mocked class method is not throw error', t => {
 	let instance = Reflect.construct(t.context.MockedMyClass, []);
 
 	t.notThrows(() => {
@@ -55,7 +65,7 @@ test('class mocked method is not throw error', t => {
 	});
 });
 
-test('class mocked static method is not throw error', t => {
+test('the moecked class static method is not throw error', t => {
 	t.notThrows(() => {
 		t.context.MockedMyClass.staticMethod();
 	});

@@ -40,21 +40,27 @@ function mockClass(ClassConstructor) {
 
 function mockObject(object) {
 	let newObject = Object.create(object);
-	mockPrototypeChain(Reflect.getPrototypeOf(newObject));
+	mockPrototypeChain(newObject);
 
 	return newObject;
 }
 
 function mockPrototypeChain(prototype) {
+	let originalPrototype = prototype;
+
 	while (prototype) {
+		let clonePrototype = Object.create(prototype);
 		let methods = Object.getOwnPropertyNames(prototype);
 
 		methods.forEach(method => {
 			if (typeof prototype[method] === 'function') {
-				prototype[method] = function mockMethod() {};
+				clonePrototype[method] = function mockMethod() {};
 			}
 		});
 
+		Reflect.setPrototypeOf(originalPrototype, clonePrototype);
+
+		originalPrototype = prototype;
 		prototype = Reflect.getPrototypeOf(prototype);
 	}
 }
