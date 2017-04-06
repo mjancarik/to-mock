@@ -8,7 +8,7 @@ The to-mock module help you with creating mocked classes and objects. So your te
 
 ```
 // MyArray.js
-class MyArray {
+export default class MyArray {
 	constructor(array) {
 		this.array = array.slice();
 	}
@@ -29,9 +29,14 @@ describe('Your spec', () => {
 	//	clone() {}
 	//}
 	const MockedMyArray = toMock(MyArray);
+	let mockedInstance = new MockedMyArray();
 
 	it('is instance of MyArray', () => {
 		expect(new MockedMyArray() instanceof MyArray).toBeTruthy();
+	});
+
+	it('method not throw Error', () => {
+		expect(() => mockedInstance.clone()).not.toThrow();
 	});
 });
 
