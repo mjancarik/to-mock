@@ -16,6 +16,8 @@ npm i to-mock --save-dev
 
 ## Usage
 
+The library is designed to be used in ES2015 environment.
+
 ```
 // MyArray.js
 export default class MyArray {
