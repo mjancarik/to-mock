@@ -6,6 +6,14 @@ The to-mock module help you with creating mocked classes and objects. So your te
 
 The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [jasmine](https://jasmine.github.io/) or [mocha](https://mochajs.org/). This is other benefit for your unit tests because you can change test framework.
 
+## Installation
+
+You can add the to-mock to your project or testing tools using npm:
+
+```
+npm i to-mock --save-dev
+```
+
 ## Usage
 
 ```
