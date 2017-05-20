@@ -1,6 +1,6 @@
 {
 	"name": "to-mock",
-	"version": "0.0.4",
+	"version": "1.0.0",
 	"description": "The utility for creating mocked classes and objects which you can use for your unit tests",
 	"main": "toMock.js",
 	"scripts": {
@@ -34,7 +34,8 @@
 		"ava": "^0.19.0",
 		"babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
 		"coveralls": "^2.13.0",
-		"nyc": "^10.2.0"
+		"nyc": "^10.2.0",
+		"sinon": "^2.2.0"
 	},
 	"ava": {
 		"babel": {
