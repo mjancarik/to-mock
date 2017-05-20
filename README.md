@@ -6,6 +6,8 @@ The to-mock module help you with creating mocked classes and objects. So your te
 
 The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [jasmine](https://jasmine.github.io/) or [mocha](https://mochajs.org/). This is other benefit for your unit tests because you can change test framework.
 
+You can mock Date, RegExp and other native object.
+
 ## Installation
 
 You can add the to-mock to your project or testing tools using npm:
@@ -16,7 +18,7 @@ npm i to-mock --save-dev
 
 ## Usage
 
-The library is designed to be used in ES2015 environment.
+The library is designed to be used in ES2015 environment. For older node <6 you must use [babel](https://babeljs.io/) and for older browser use [browserify](http://browserify.org/) with  [babel](https://babeljs.io/).
 
 ```
 // MyArray.js
@@ -50,6 +52,33 @@ describe('Your spec', () => {
 
 	it('method not throw Error', () => {
 		expect(() => mockedInstance.clone()).not.toThrow();
+	});
+});
+```
+
+Example with overriding native Date object.
+
+```
+//MyDateSpec.js
+import toMock from 'to-mock';
+
+describe('Your spec', () => {
+
+	let MockedDate = toMock(Date);
+	let RealDate = Date;
+
+	beforeEach(() => {
+		Date = MockedDate;
+	});
+
+	afterEach(() => {
+		Date = RealDate;
+	};)
+
+	it('you can mock date', () => {
+		spyOn(MockedDate, 'now').and.returnValue(1);
+
+		expect(Date.now()).toEqual(1);
 	});
 });
 
