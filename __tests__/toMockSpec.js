@@ -1,4 +1,5 @@
 import test from 'ava';
+import sinon from 'sinon'
 import toMock from '../toMock';
 
 class Dummy {
@@ -33,6 +34,7 @@ test.beforeEach((t) => {
 	t.context.myObject = myObject;
 	t.context.MockedMyClass = toMock(MyClass);
 	t.context.MockedDate = toMock(Date);
+	t.context.MockedRegExp = toMock(RegExp);
 	t.context.mockedMyObject = toMock(myObject);
 })
 
@@ -65,7 +67,7 @@ test('the mocked class method is not throw error', t => {
 	});
 });
 
-test('the moecked class static method is not throw error', t => {
+test('the mocked class static method is not throw error', t => {
 	t.notThrows(() => {
 		t.context.MockedMyClass.staticMethod();
 	});
@@ -73,6 +75,18 @@ test('the moecked class static method is not throw error', t => {
 
 test('date mocked static method return undefined', t => {
 	t.truthy(t.context.MockedDate.now() === undefined);
+});
+
+test('date mocked static method return undefined', t => {
+	t.context.MockedDate.now = sinon.stub().withArgs().returns(1);
+
+	t.truthy(t.context.MockedDate.now() === 1);
+});
+
+test('RegExp can be mocked with his methods', t => {
+	let regexp = Reflect.construct(t.context.MockedRegExp, []);
+
+	t.truthy(regexp.test() === undefined);
 });
 
 test('object mocked method is not throw error', t => {
