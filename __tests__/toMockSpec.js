@@ -1,6 +1,6 @@
 import test from 'ava';
 import sinon from 'sinon'
-import toMock from '../toMock';
+import toMock, { toMockedInstance, mockPrototypeChain } from '../toMock';
 
 class Dummy {
 	constructor(array) {
@@ -45,7 +45,7 @@ test('the mocked class is not throw error for creating new instance of it', t =>
 });
 
 test('the mocked class is instance of provided class', t => {
-	let instance = Reflect.construct(t.context.MockedMyClass, []);
+	const instance = Reflect.construct(t.context.MockedMyClass, []);
 
 	t.truthy(instance instanceof MyClass);
 	t.truthy(instance instanceof Dummy);
@@ -60,7 +60,7 @@ test('The mocked prototype chain is modified', t => {
 });
 
 test('the mocked class method is not throw error', t => {
-	let instance = Reflect.construct(t.context.MockedMyClass, []);
+	const instance = Reflect.construct(t.context.MockedMyClass, []);
 
 	t.notThrows(() => {
 		instance.method();
@@ -84,7 +84,7 @@ test('date mocked static method return undefined', t => {
 });
 
 test('RegExp can be mocked with his methods', t => {
-	let regexp = Reflect.construct(t.context.MockedRegExp, []);
+	const regexp = Reflect.construct(t.context.MockedRegExp, []);
 
 	t.truthy(regexp.test() === undefined);
 });
@@ -98,5 +98,24 @@ test('object mocked method is not throw error', t => {
 test('throw error for unsupported type', t => {
 	t.throws(() => {
 		toMock(1);
-	});
+	}, TypeError);
+});
+
+test('create mocked instance from MyClass', t => {
+	const mockedInstance = toMockedInstance(MyClass);
+
+	t.truthy(mockedInstance instanceof MyClass);
+});
+
+test('create mocked instance from MyClass with overrides', t => {
+	const mockedInstance = toMockedInstance(MyClass, { method: () => 1 });
+
+	t.truthy(mockedInstance instanceof MyClass);
+	t.truthy(mockedInstance.method() === 1);
+});
+
+test('return mocked object with overrides', t => {
+	const mockedObject = toMockedInstance(myObject, { method: () => 1 });
+
+	t.truthy(mockedObject.method() === 1);
 });
