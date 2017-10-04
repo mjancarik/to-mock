@@ -79,7 +79,11 @@ function mockPrototypeChain(prototype) {
 
 		Reflect.setPrototypeOf(originalPrototype, clonePrototype);
 
-		if (originalPrototype[PROTOTYPE_CHAIN_MOCKED]) {
+		if (
+			originalPrototype[PROTOTYPE_CHAIN_MOCKED] &&
+			prototype[PROTOTYPE_CHAIN_MOCKED] &&
+			originalPrototype !== prototype
+		) {
 			return;
 		}
 

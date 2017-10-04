@@ -6,6 +6,10 @@ class Dummy {
 	constructor(array) {
 		array.slice();
 	}
+
+	dummyMethod() {
+		throw new Error('Dummy method');
+	}
 }
 
 class MyClass extends Dummy {
@@ -105,6 +109,15 @@ test('create mocked instance from MyClass', t => {
 	const mockedInstance = toMockedInstance(MyClass);
 
 	t.truthy(mockedInstance instanceof MyClass);
+});
+
+test('create mocked instance from MyClass with overrides', t => {
+	const mockedInstance = toMockedInstance(MyClass, { method: () => 1 });
+
+	t.truthy(mockedInstance instanceof MyClass);
+	t.notThrows(() => {
+		mockedInstance.dummyMethod();
+	})
 });
 
 test('create mocked instance from MyClass with overrides', t => {
