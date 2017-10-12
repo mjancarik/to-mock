@@ -20,7 +20,7 @@ npm i to-mock --save-dev
 
 The library is designed to be used in ES2015 environment. For older node <6 you must use [babel](https://babeljs.io/) and for older browser use [browserify](http://browserify.org/) with  [babel](https://babeljs.io/).
 
-```
+```javascript
 // MyArray.js
 export default class MyArray {
 	constructor(array) {
@@ -58,7 +58,7 @@ describe('Your spec', () => {
 
 Example with overriding native Date object.
 
-```
+```javascript
 //MyDateSpec.js
 import toMock from 'to-mock';
 
@@ -84,9 +84,9 @@ describe('Your spec', () => {
 
 ```
 
-Sometimes you want to working with mocked instance which has got defined some default values. You can use of course toMock function for that but better solution is use toMockedInstance function.
+Sometimes you want to working with mocked instance which will be defined some default values. You can use of course toMock function for that but better solution is use toMockedInstance function.
 
-```
+```javascript
 //MyDateSpec.js
 import toMock, { toMockedInstance } from 'to-mock';
 
