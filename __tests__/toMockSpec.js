@@ -10,12 +10,28 @@ class Dummy {
 	dummyMethod() {
 		throw new Error('Dummy method');
 	}
+
+	static staticDummyMethod() {
+		throw new Error('Static dummy method');
+	}
 }
 
 class MyClass extends Dummy {
 	constructor(array) {
 		super(array);
 		this.array = array.slice();
+	}
+
+	static get black() {
+		return 'black';
+	}
+
+	get count() {
+		return this.array.length;
+	}
+
+	set count(value) {
+		this.array = new Array(value);
 	}
 
 	static staticMethod(array) {
@@ -71,18 +87,24 @@ test('the mocked class method is not throw error', t => {
 	});
 });
 
-test('the mocked class static method is not throw error', t => {
+test('the mocked class is not throw error for static method', t => {
 	t.notThrows(() => {
 		t.context.MockedMyClass.staticMethod();
 	});
 });
 
-test('date mocked static method return undefined', t => {
+test('the mocked class is not throw error for extended static method', t => {
+	t.notThrows(() => {
+		t.context.MockedMyClass.staticDummyMethod();
+	});
+});
+
+test('Date mocked static method return undefined', t => {
 	t.truthy(t.context.MockedDate.now() === undefined);
 });
 
-test('date mocked static method return undefined', t => {
-	t.context.MockedDate.now = sinon.stub().withArgs().returns(1);
+test('Date mocked static method return 1', t => {
+	t.context.MockedDate.now = () => 1;
 
 	t.truthy(t.context.MockedDate.now() === 1);
 });
@@ -91,6 +113,10 @@ test('RegExp can be mocked with his methods', t => {
 	const regexp = Reflect.construct(t.context.MockedRegExp, []);
 
 	t.truthy(regexp.test() === undefined);
+});
+
+test('the mocked class is not throw error for static getter', t => {
+	t.truthy(t.context.MockedMyClass.black !== 'black');
 });
 
 test('object mocked method is not throw error', t => {
@@ -131,4 +157,12 @@ test('return mocked object with overrides', t => {
 	const mockedObject = toMockedInstance(myObject, { method: () => 1 });
 
 	t.truthy(mockedObject.method() === 1);
+});
+
+test('the mocked instance is not throw error for getter', t => {
+	const mockedInstance = toMockedInstance(MyClass);
+
+	t.notThrows(() => {
+		mockedInstance.count;
+	})
 });

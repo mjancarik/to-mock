@@ -37,17 +37,7 @@ function mockClass(ClassConstructor) {
 	Reflect.setPrototypeOf(Mock, ClassConstructor);
 
 	mockPrototypeChain(Mock.prototype);
-
-	let staticMethods = Object.getOwnPropertyNames(ClassConstructor);
-	staticMethods.forEach(staticMethod => {
-		try {
-			if (typeof ClassConstructor[staticMethod] === 'function') {
-				Mock[staticMethod] = function mockStaticMethod() {};
-			} else {
-				Mock[staticMethod] = ClassConstructor[staticMethod];
-			}
-		} catch(_) {}
-	});
+	mockStatic(ClassConstructor, Mock);
 
 	return Mock;
 }
@@ -57,6 +47,15 @@ function mockObject(object) {
 	mockPrototypeChain(newObject);
 
 	return newObject;
+}
+
+function mockStatic(ClassConstructor, Mock) {
+	while(ClassConstructor && Mock) {
+		mockOwnProperties(ClassConstructor, Mock);
+
+		ClassConstructor = Reflect.getPrototypeOf(ClassConstructor);
+		Mock = Reflect.getPrototypeOf(Mock);
+	}
 }
 
 function mockPrototypeChain(prototype) {
@@ -69,13 +68,8 @@ function mockPrototypeChain(prototype) {
 				enumerable: false
 			}
 		});
-		let methods = Object.getOwnPropertyNames(prototype);
 
-		methods.forEach(method => {
-			if (typeof prototype[method] === 'function') {
-				clonePrototype[method] = function mockMethod() {};
-			}
-		});
+		mockOwnProperties(prototype, clonePrototype);
 
 		Reflect.setPrototypeOf(originalPrototype, clonePrototype);
 
@@ -92,9 +86,31 @@ function mockPrototypeChain(prototype) {
 	}
 }
 
+function mockOwnProperties(original, mock) {
+	Object.entries(Object.getOwnPropertyDescriptors(original))
+		.forEach(([key, descriptor]) => {
+			try {
+				if (
+					(descriptor.get && typeof descriptor.get === 'function') ||
+					(descriptor.set && typeof descriptor.set === 'function')
+				) {
+					Object.defineProperty(mock, key, Object.assign({}, descriptor, {
+						get: () => {},
+						set: () => {}
+					}));
+				}
+
+				if (original[key] && typeof original[key] === 'function') {
+					mock[key] = function mockMethod() {};
+				}
+			} catch(_) {}
+		});
+}
+
 exports.default = toMock;
 exports.toMock = toMock;
 exports.toMockedInstance = toMockedInstance;
 exports.mockClass = mockClass;
 exports.mockObject = mockObject;
 exports.mockPrototypeChain = mockPrototypeChain;
+exports.mockOwnProperties = mockOwnProperties;
