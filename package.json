@@ -1,6 +1,6 @@
 {
 	"name": "to-mock",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "The utility for creating mocked classes and objects which you can use for your unit tests",
 	"main": "toMock.js",
 	"scripts": {
