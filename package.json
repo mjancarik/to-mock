@@ -4,7 +4,10 @@
 	"description": "The utility for creating mocked classes and objects which you can use for your unit tests",
 	"main": "toMock.js",
 	"scripts": {
-		"test": "node_modules/.bin/ava"
+		"lint": "node_modules/.bin/eslint -c ./.eslintrc.js --fix './**/*.js' --ignore-path ./.prettierignore",
+		"test": "node_modules/.bin/ava",
+		"preversion": "npm test && npm run lint",
+		"postversion": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
 	},
 	"repository": {
 		"type": "git",
@@ -32,8 +35,14 @@
 	"homepage": "https://github.com/mjancarik/to-mock#readme",
 	"devDependencies": {
 		"ava": "^0.22.0",
+		"babel-eslint": "^8.0.2",
 		"babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
 		"coveralls": "^3.0.0",
+		"eslint": "^4.10.0",
+		"eslint-config-last": "^0.0.3",
+		"eslint-config-prettier": "^2.7.0",
+		"eslint-plugin-prettier": "^2.3.1",
+		"prettier": "^1.8.2",
 		"nyc": "^11.2.1",
 		"sinon": "^4.0.0"
 	},
