@@ -26,6 +26,10 @@ class MyClass extends Dummy {
 		return 'black';
 	}
 
+	get isEmpty() {
+		return this.array.length === 0;
+	}
+
 	get count() {
 		return this.array.length;
 	}
@@ -151,6 +155,12 @@ test('create mocked instance from MyClass with overrides', t => {
 
 	t.truthy(mockedInstance instanceof MyClass);
 	t.truthy(mockedInstance.method() === 1);
+});
+
+test('create mocked instance from MyClass with overrides getter', t => {
+	const mockedInstance = toMockedInstance(MyClass, { isEmpty: false });
+
+	t.truthy(mockedInstance.isEmpty === false);
 });
 
 test('return mocked object with overrides', t => {

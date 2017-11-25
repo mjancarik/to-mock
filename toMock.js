@@ -88,20 +88,22 @@ function mockPrototypeChain(prototype) {
 
 function mockOwnProperties(original, mock) {
 	Object.entries(Object.getOwnPropertyDescriptors(original))
-		.forEach(([key, descriptor]) => {
+		.forEach(([property, descriptor]) => {
 			try {
 				if (
 					(descriptor.get && typeof descriptor.get === 'function') ||
 					(descriptor.set && typeof descriptor.set === 'function')
 				) {
-					Object.defineProperty(mock, key, Object.assign({}, descriptor, {
-						get: () => {},
-						set: () => {}
+					let _mockedValue = undefined;
+
+					Object.defineProperty(mock, property, Object.assign({}, descriptor, {
+						get: () => _mockedValue,
+						set: (value) => { _mockedValue = value }
 					}));
 				}
 
-				if (original[key] && typeof original[key] === 'function') {
-					mock[key] = function mockMethod() {};
+				if (original[property] && typeof original[property] === 'function') {
+					mock[property] = function mockMethod() {};
 				}
 			} catch(_) {}
 		});
