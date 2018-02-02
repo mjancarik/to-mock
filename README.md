@@ -95,11 +95,11 @@ describe('Your spec', () => {
 	it('you can create mocked instance of date', () => {
 		//let MockedDate = toMock(Date);
 		//let dateInstance = new MockedDate();
-		//let dateInstanceWithDefault = Object.assign(dateInstance, { now: () => 1 });
+		//let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
 
-		let dateInstanceWithDefault = toMockedInstance(Date, { now: () => 1 })
+		let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 })
 
-		expect(Date.now()).toEqual(1);
+		expect(dateInstanceWithDefault.getTime()).toEqual(1);
 	});
 });
 
