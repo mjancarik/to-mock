@@ -1,55 +1,55 @@
 {
-	"name": "to-mock",
-	"version": "1.2.1",
-	"description": "The utility for creating mocked classes and objects which you can use for your unit tests",
-	"main": "toMock.js",
-	"scripts": {
-		"lint": "node_modules/.bin/eslint -c ./.eslintrc.js --fix './**/*.js' --ignore-path ./.prettierignore",
-		"test": "node_modules/.bin/ava",
-		"preversion": "npm test && npm run lint",
-		"postversion": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/mjancarik/to-mock.git"
-	},
-	"keywords": [
-		"mock",
-		"unit",
-		"tests",
-		"integration",
-		"test",
-		"javascript",
-		"ES6",
-		"class",
-		"Object"
-	],
-	"publishConfig": {
-		"registry": "http://registry.npmjs.org/"
-	},
-	"author": "Miroslav Jancarik",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/mjancarik/to-mock/issues"
-	},
-	"homepage": "https://github.com/mjancarik/to-mock#readme",
-	"devDependencies": {
-		"ava": "^0.25.0",
-		"babel-eslint": "^8.2.1",
-		"babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
-		"coveralls": "^3.0.0",
-		"eslint": "^4.16.0",
-		"eslint-config-last": "^0.0.5",
-		"eslint-config-prettier": "^2.9.0",
-		"eslint-plugin-prettier": "^2.6.0",
-		"prettier": "^1.10.2",
-		"nyc": "^11.4.1"
-	},
-	"ava": {
-		"babel": {
-			"plugins": [
-				"transform-es2015-modules-commonjs"
-			]
-		}
-	}
+    "name": "to-mock",
+    "version": "1.2.1",
+    "description": "The utility to mock class and objects. You can use mocked classes and objects for your unit and integration tests",
+    "main": "toMock.js",
+    "scripts": {
+        "lint": "node_modules/.bin/eslint -c ./.eslintrc.js --fix './**/*.js' --ignore-path ./.prettierignore",
+        "test": "node_modules/.bin/ava",
+        "preversion": "npm test && npm run lint",
+        "postversion": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mjancarik/to-mock.git"
+    },
+    "keywords": [
+        "mock",
+        "unit",
+        "tests",
+        "integration",
+        "test",
+        "javascript",
+        "ES6",
+        "class",
+        "object"
+    ],
+    "publishConfig": {
+        "registry": "http://registry.npmjs.org/"
+    },
+    "author": "Miroslav Jancarik",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/mjancarik/to-mock/issues"
+    },
+    "homepage": "https://github.com/mjancarik/to-mock#readme",
+    "devDependencies": {
+        "ava": "^0.25.0",
+        "babel-eslint": "^8.2.1",
+        "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+        "coveralls": "^3.0.0",
+        "eslint": "^4.16.0",
+        "eslint-config-last": "^0.0.5",
+        "eslint-config-prettier": "^2.9.0",
+        "eslint-plugin-prettier": "^2.6.0",
+        "prettier": "^1.10.2",
+        "nyc": "^11.4.1"
+    },
+    "ava": {
+        "babel": {
+            "plugins": [
+                "transform-es2015-modules-commonjs"
+            ]
+        }
+    }
 }
