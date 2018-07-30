@@ -26,6 +26,8 @@ class MyClass extends Dummy {
   }
 
   get isEmpty() {
+    shouldBeUndefined = 1;
+
     return this.array.length === 0;
   }
 
@@ -51,6 +53,7 @@ let myObject = {
     array.slice();
   }
 };
+let shouldBeUndefined;
 
 test.beforeEach(t => {
   t.context.MyClass = MyClass;
@@ -59,6 +62,7 @@ test.beforeEach(t => {
   t.context.MockedDate = toMock(Date);
   t.context.MockedRegExp = toMock(RegExp);
   t.context.mockedMyObject = toMock(myObject);
+  shouldBeUndefined = undefined;
 });
 
 test('the mocked class is not throw error for creating new instance of it', t => {
@@ -174,4 +178,10 @@ test('the mocked instance is not throw error for getter', t => {
   t.notThrows(() => {
     mockedInstance.count;
   });
+});
+
+test('the mocked instance should not call getters', t => {
+  toMockedInstance(MyClass);
+
+  t.truthy(shouldBeUndefined === undefined);
 });
