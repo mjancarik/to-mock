@@ -92,8 +92,8 @@ function mockOwnProperties(original, mock) {
     ([property, descriptor]) => {
       try {
         if (
-          (typeof descriptor.get === 'function') ||
-          (typeof descriptor.set === 'function')
+          typeof descriptor.get === 'function' ||
+          typeof descriptor.set === 'function'
         ) {
           let _mockedValue = undefined;
 
