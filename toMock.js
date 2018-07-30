@@ -92,8 +92,8 @@ function mockOwnProperties(original, mock) {
     ([property, descriptor]) => {
       try {
         if (
-          (descriptor.get && typeof descriptor.get === 'function') ||
-          (descriptor.set && typeof descriptor.set === 'function')
+          (typeof descriptor.get === 'function') ||
+          (typeof descriptor.set === 'function')
         ) {
           let _mockedValue = undefined;
 
@@ -107,9 +107,7 @@ function mockOwnProperties(original, mock) {
               }
             })
           );
-        }
-
-        if (original[property] && typeof original[property] === 'function') {
+        } else if (typeof original[property] === 'function') {
           mock[property] = function mockMethod() {};
         }
       } catch (_) {} // eslint-disable-line no-empty
