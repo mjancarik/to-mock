@@ -5,4 +5,5 @@
 .npmignore
 .prettierignore
 .travis.yml
+.npmrc
 README.md
