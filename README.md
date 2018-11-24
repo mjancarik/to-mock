@@ -23,13 +23,13 @@ The library is designed to be used in ES2015 environment. For older node <6 you 
 ```javascript
 // MyArray.js
 export default class MyArray {
-	constructor(array) {
-		this.array = array.slice();
-	}
+    constructor(array) {
+    this.array = array.slice();
+    }
 
-	clone() {
-		return this.array.slice();
-	}
+    clone() {
+    return this.array.slice();
+    }
 }
 
 //MyArraySpec.js
@@ -38,21 +38,21 @@ import toMock from 'to-mock';
 
 describe('Your spec', () => {
 
-	//class MockedMyArray {
-	//	constructor() {}
-	//	clone() {}
-	//}
-	// The MyArray class is not modified
-	const MockedMyArray = toMock(MyArray);
-	let mockedInstance = new MockedMyArray();
+    //class MockedMyArray {
+    //	constructor() {}
+    //	clone() {}
+    //}
+    // The MyArray class is not modified
+    const MockedMyArray = toMock(MyArray);
+    let mockedInstance = new MockedMyArray();
 
-	it('is instance of MyArray', () => {
-		expect(new MockedMyArray() instanceof MyArray).toBeTruthy();
-	});
+    it('is instance of MyArray', () => {
+    expect(new MockedMyArray() instanceof MyArray).toBeTruthy();
+    });
 
-	it('method not throw Error', () => {
-		expect(() => mockedInstance.clone()).not.toThrow();
-	});
+    it('method not throw Error', () => {
+    expect(() => mockedInstance.clone()).not.toThrow();
+    });
 });
 ```
 
@@ -64,22 +64,22 @@ import toMock from 'to-mock';
 
 describe('Your spec', () => {
 
-	let MockedDate = toMock(Date);
-	let RealDate = Date;
+    let MockedDate = toMock(Date);
+    let RealDate = Date;
 
-	beforeEach(() => {
-		Date = MockedDate;
-	});
+    beforeEach(() => {
+    Date = MockedDate;
+    });
 
-	afterEach(() => {
-		Date = RealDate;
-	};)
+    afterEach(() => {
+    Date = RealDate;
+    };)
 
-	it('you can mock date', () => {
-		spyOn(MockedDate, 'now').and.returnValue(1);
+    it('you can mock date', () => {
+    spyOn(MockedDate, 'now').and.returnValue(1);
 
-		expect(Date.now()).toEqual(1);
-	});
+    expect(Date.now()).toEqual(1);
+    });
 });
 
 ```
@@ -92,15 +92,45 @@ import toMock, { toMockedInstance } from 'to-mock';
 
 describe('Your spec', () => {
 
-	it('you can create mocked instance of date', () => {
-		//let MockedDate = toMock(Date);
-		//let dateInstance = new MockedDate();
-		//let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
+    it('you can create mocked instance of date', () => {
+    //let MockedDate = toMock(Date);
+    //let dateInstance = new MockedDate();
+    //let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
 
-		let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 })
+    let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 });
 
-		expect(dateInstanceWithDefault.getTime()).toEqual(1);
-	});
+    expect(dateInstanceWithDefault.getTime()).toEqual(1);
+    });
+});
+
+```
+
+You want to working with unmocked methods and properties in very rare use case. For that case you can used globalKeepUnmock method or defined keepUnmock callback as other argument.
+
+```javascript
+//MyDateSpec.js
+import toMock, { toMockedInstance, setGlobalKeepUnmock } from 'to-mock';
+
+describe('Your spec', () => {
+
+    it('you can create mocked instance of date', () => {
+        function keepUnmock({ property, descriptor, original, mock }) {
+            return property === 'getDay';
+        }
+
+        //let MockedDate = toMock(Date, keepUnmock);
+        //or    
+        //let MockedDate = toMock(Date);
+        //setGlobalKeepUnmock(keepUnmock);
+
+        //let dateInstance = new MockedDate();
+        //let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
+
+        let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 }, keepUnmock);
+
+        expect(dateInstanceWithDefault.getTime()).toEqual(1);
+        expect(Reflect.apply(dateInstanceWithDefault.getDay, new Date(), []) === Date.getDay()).toEqual(true);
+    });
 });
 
 ```

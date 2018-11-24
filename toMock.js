@@ -2,15 +2,16 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+let globalKeepUnmock = null;
 const MOCKED_PROTOTYPE_CHAIN = Symbol('mockedPrototypeChain');
 
-function toMock(arg) {
+function toMock(arg, keepUnmock) {
   if (typeof arg === 'function') {
-    return mockClass(arg);
+    return mockClass(arg, keepUnmock);
   }
 
   if (typeof arg === 'object') {
-    return mockObject(arg);
+    return mockObject(arg, keepUnmock);
   }
 
   throw new TypeError(
@@ -19,8 +20,8 @@ function toMock(arg) {
   );
 }
 
-function toMockedInstance(arg, overrides = {}) {
-  let mockedArg = toMock(arg);
+function toMockedInstance(arg, overrides = {}, keepUnmock) {
+  let mockedArg = toMock(arg, keepUnmock);
 
   if (typeof mockedArg === 'function') {
     let instance = Reflect.construct(mockedArg, []);
@@ -31,35 +32,35 @@ function toMockedInstance(arg, overrides = {}) {
   return Object.assign(mockedArg, overrides);
 }
 
-function mockClass(ClassConstructor) {
+function mockClass(ClassConstructor, keepUnmock) {
   class Mock {}
 
   Reflect.setPrototypeOf(Mock.prototype, ClassConstructor.prototype);
   Reflect.setPrototypeOf(Mock, ClassConstructor);
 
-  mockPrototypeChain(Mock.prototype);
-  mockStatic(ClassConstructor, Mock);
+  mockPrototypeChain(Mock.prototype, keepUnmock);
+  mockStatic(ClassConstructor, Mock, keepUnmock);
 
   return Mock;
 }
 
-function mockObject(object) {
+function mockObject(object, keepUnmock) {
   let newObject = Object.create(object);
-  mockPrototypeChain(newObject);
+  mockPrototypeChain(newObject, keepUnmock);
 
   return newObject;
 }
 
-function mockStatic(ClassConstructor, Mock) {
+function mockStatic(ClassConstructor, Mock, keepUnmock) {
   while (ClassConstructor && Mock) {
-    mockOwnProperties(ClassConstructor, Mock);
+    mockOwnProperties(ClassConstructor, Mock, keepUnmock);
 
     ClassConstructor = Reflect.getPrototypeOf(ClassConstructor);
     Mock = Reflect.getPrototypeOf(Mock);
   }
 }
 
-function mockPrototypeChain(prototype) {
+function mockPrototypeChain(prototype, keepUnmock) {
   let originalPrototype = prototype;
 
   while (prototype) {
@@ -70,7 +71,7 @@ function mockPrototypeChain(prototype) {
       }
     });
 
-    mockOwnProperties(prototype, clonePrototype);
+    mockOwnProperties(prototype, clonePrototype, keepUnmock);
 
     Reflect.setPrototypeOf(originalPrototype, clonePrototype);
 
@@ -87,10 +88,23 @@ function mockPrototypeChain(prototype) {
   }
 }
 
-function mockOwnProperties(original, mock) {
+function mockOwnProperties(original, mock, keepUnmock) {
+  const isKeepUnMockDefined = keepUnmock && typeof keepUnmock === 'function';
+  const isGlobalKeepUnMockDefined =
+    globalKeepUnmock && typeof globalKeepUnmock === 'function';
+
   Object.entries(Object.getOwnPropertyDescriptors(original)).forEach(
     ([property, descriptor]) => {
       try {
+        const keepUnmockArgs = { property, descriptor, original, mock };
+
+        if (
+          (isKeepUnMockDefined && keepUnmock(keepUnmockArgs)) ||
+          (isGlobalKeepUnMockDefined && globalKeepUnmock(keepUnmockArgs))
+        ) {
+          return;
+        }
+
         if (
           typeof descriptor.get === 'function' ||
           typeof descriptor.set === 'function'
@@ -115,6 +129,10 @@ function mockOwnProperties(original, mock) {
   );
 }
 
+function setGlobalKeepUnmock(callback) {
+  globalKeepUnmock = callback;
+}
+
 exports.default = toMock;
 exports.toMock = toMock;
 exports.toMockedInstance = toMockedInstance;
@@ -122,3 +140,4 @@ exports.mockClass = mockClass;
 exports.mockObject = mockObject;
 exports.mockPrototypeChain = mockPrototypeChain;
 exports.mockOwnProperties = mockOwnProperties;
+exports.setGlobalKeepUnmock = setGlobalKeepUnmock;
