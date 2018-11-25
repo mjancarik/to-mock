@@ -129,7 +129,7 @@ describe('Your spec', () => {
         let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 }, keepUnmock);
 
         expect(dateInstanceWithDefault.getTime()).toEqual(1);
-        expect(Reflect.apply(dateInstanceWithDefault.getDay, new Date(), []) === Date.getDay()).toEqual(true);
+        expect(Reflect.apply(dateInstanceWithDefault.getDay, new Date(), []) === new Date().getDay()).toEqual(true);
     });
 });
 
