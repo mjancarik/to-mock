@@ -3,6 +3,9 @@ Object.defineProperty(exports, '__esModule', {
 });
 
 let globalKeepUnmock = null;
+let globalMockMethod = () => {
+  return function mockMethod() {};
+};
 const MOCKED_PROTOTYPE_CHAIN = Symbol('mockedPrototypeChain');
 
 function toMock(arg, keepUnmock) {
@@ -122,7 +125,7 @@ function mockOwnProperties(original, mock, keepUnmock) {
             })
           );
         } else if (typeof original[property] === 'function') {
-          mock[property] = function mockMethod() {};
+          mock[property] = globalMockMethod();
         }
       } catch (_) {} // eslint-disable-line no-empty
     }
@@ -133,6 +136,10 @@ function setGlobalKeepUnmock(callback) {
   globalKeepUnmock = callback;
 }
 
+function setGlobalMockMethod(mockMethod) {
+  globalMockMethod = mockMethod;
+}
+
 exports.default = toMock;
 exports.toMock = toMock;
 exports.toMockedInstance = toMockedInstance;
@@ -141,3 +148,4 @@ exports.mockObject = mockObject;
 exports.mockPrototypeChain = mockPrototypeChain;
 exports.mockOwnProperties = mockOwnProperties;
 exports.setGlobalKeepUnmock = setGlobalKeepUnmock;
+exports.setGlobalMockMethod = setGlobalMockMethod;

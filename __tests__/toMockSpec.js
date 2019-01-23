@@ -1,5 +1,9 @@
 import test from 'ava';
-import toMock, { toMockedInstance, setGlobalKeepUnmock } from '../toMock';
+import toMock, {
+  toMockedInstance,
+  setGlobalKeepUnmock,
+  setGlobalMockMethod
+} from '../toMock';
 
 let shouldBeUndefined;
 
@@ -223,4 +227,17 @@ test('the mocked instance should unmock Date.prototype.getDay method', t => {
     Reflect.apply(dateInstanceWithDefault.getDay, new Date(), []) ===
       new Date().getDay()
   );
+});
+
+test('the class methods should be updated with globalMockMethod', t => {
+  function mockMethod() {}
+  let getMockMethod = () => mockMethod;
+  class SampleClass {
+    sampleClassMethod() {}
+  }
+
+  setGlobalMockMethod(getMockMethod);
+  let instance = toMockedInstance(SampleClass);
+
+  t.truthy(instance.sampleClassMethod === mockMethod);
 });
