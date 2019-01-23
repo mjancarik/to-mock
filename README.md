@@ -135,3 +135,25 @@ describe('Your spec', () => {
 });
 
 ```
+
+You can define a specific mock function used for all method mocks. This way, you can replace all these methods with jest.fn, or any other mock method, depending on your testing framework.
+
+```javascript
+//MyDateSpec.js
+import toMock, { toMockedInstance, setGlobalMockMethod } from 'to-mock';
+
+describe('Your spec', () => {
+
+    it('you can create mocked instance of date', () => {
+        setGlobalMockMethod(jest.fn);
+
+        let dateInstance = toMockedInstance(Date);
+        let time = dateInstance.getTime();
+
+        expect(time).toEqual(1);
+        // You can use all jest.fn() related methods now
+        expect(dateInstance.getTime).toHaveBeenCalled();
+    });
+});
+
+```
