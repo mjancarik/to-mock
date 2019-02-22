@@ -23,6 +23,11 @@
     "ES6",
     "class",
     "object",
+    "jest",
+    "jasmine",
+    "mocha",
+    "tape",
+    "ava",
     "typescript"
   ],
   "publishConfig": {

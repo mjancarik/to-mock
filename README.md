@@ -5,7 +5,7 @@
 
 The to-mock module help you with creating mocked classes and objects. So your tests are up to date with your defined classes because you don't have to keep mocks or interface for your tests. Then you can creating the unit tests for interface and not for implementation detail, your tests are more isolated and you can easy creating real unit tests.
 
-The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [jasmine](https://jasmine.github.io/) or [mocha](https://mochajs.org/). Event you may use it for mocking in [typescript](https://www.typescriptlang.org/). Those are other benefits for your unit tests because you can change test framework or language.
+The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [tape](https://www.npmjs.com/package/tape), [jasmine](https://jasmine.github.io/), [mocha](https://mochajs.org/) and others. Even you may use it for mocking in [typescript](https://www.typescriptlang.org/). Those are other benefits for your unit tests because you can change test framework or language.
 
 You can mock Date, RegExp and other native object.
 
