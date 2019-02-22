@@ -5,7 +5,7 @@
 
 The to-mock module help you with creating mocked classes and objects. So your tests are up to date with your defined classes because you don't have to keep mocks or interface for your tests. Then you can creating the unit tests for interface and not for implementation detail, your tests are more isolated and you can easy creating real unit tests.
 
-The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [jasmine](https://jasmine.github.io/) or [mocha](https://mochajs.org/). This is other benefit for your unit tests because you can change test framework.
+The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [jasmine](https://jasmine.github.io/) or [mocha](https://mochajs.org/). Event you may use it for mocking in [typescript](https://www.typescriptlang.org/). Those are other benefits for your unit tests because you can change test framework or language.
 
 You can mock Date, RegExp and other native object.
 
@@ -13,7 +13,7 @@ You can mock Date, RegExp and other native object.
 
 You can add the to-mock to your project or testing tools using npm:
 
-```
+``` shell
 npm i to-mock --save-dev
 ```
 
@@ -24,13 +24,13 @@ The library is designed to be used in ES2015 environment. For older node <6 you 
 ```javascript
 // MyArray.js
 export default class MyArray {
-    constructor(array) {
+  constructor(array) {
     this.array = array.slice();
-    }
+  }
 
-    clone() {
+  clone() {
     return this.array.slice();
-    }
+  }
 }
 
 //MyArraySpec.js
@@ -39,21 +39,21 @@ import toMock from 'to-mock';
 
 describe('Your spec', () => {
 
-    //class MockedMyArray {
-    //	constructor() {}
-    //	clone() {}
-    //}
-    // The MyArray class is not modified
-    const MockedMyArray = toMock(MyArray);
-    let mockedInstance = new MockedMyArray();
+  //class MockedMyArray {
+  //	constructor() {}
+  //	clone() {}
+  //}
+  // The MyArray class is not modified
+  const MockedMyArray = toMock(MyArray);
+  let mockedInstance = new MockedMyArray();
 
-    it('is instance of MyArray', () => {
+  it('is instance of MyArray', () => {
     expect(new MockedMyArray() instanceof MyArray).toBeTruthy();
-    });
+  });
 
-    it('method not throw Error', () => {
+  it('method not throw Error', () => {
     expect(() => mockedInstance.clone()).not.toThrow();
-    });
+  });
 });
 ```
 
@@ -65,22 +65,22 @@ import toMock from 'to-mock';
 
 describe('Your spec', () => {
 
-    let MockedDate = toMock(Date);
-    let RealDate = Date;
+  let MockedDate = toMock(Date);
+  let RealDate = Date;
 
-    beforeEach(() => {
+  beforeEach(() => {
     Date = MockedDate;
-    });
+  });
 
-    afterEach(() => {
+  afterEach(() => {
     Date = RealDate;
-    };)
+  };)
 
-    it('you can mock date', () => {
+  it('you can mock date', () => {
     spyOn(MockedDate, 'now').and.returnValue(1);
 
     expect(Date.now()).toEqual(1);
-    });
+  });
 });
 
 ```
@@ -93,7 +93,7 @@ import toMock, { toMockedInstance } from 'to-mock';
 
 describe('Your spec', () => {
 
-    it('you can create mocked instance of date', () => {
+  it('you can create mocked instance of date', () => {
     //let MockedDate = toMock(Date);
     //let dateInstance = new MockedDate();
     //let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
@@ -101,7 +101,7 @@ describe('Your spec', () => {
     let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 });
 
     expect(dateInstanceWithDefault.getTime()).toEqual(1);
-    });
+  });
 });
 
 ```
@@ -114,24 +114,24 @@ import toMock, { toMockedInstance, setGlobalKeepUnmock } from 'to-mock';
 
 describe('Your spec', () => {
 
-    it('you can create mocked instance of date', () => {
-        function keepUnmock({ property, descriptor, original, mock }) {
-            return property === 'getDay';
-        }
+  it('you can create mocked instance of date', () => {
+    function keepUnmock({ property, descriptor, original, mock }) {
+      return property === 'getDay';
+    }
 
-        //let MockedDate = toMock(Date, keepUnmock);
-        //or    
-        //let MockedDate = toMock(Date);
-        //setGlobalKeepUnmock(keepUnmock);
+    //let MockedDate = toMock(Date, keepUnmock);
+    //or    
+    //let MockedDate = toMock(Date);
+    //setGlobalKeepUnmock(keepUnmock);
 
-        //let dateInstance = new MockedDate();
-        //let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
+    //let dateInstance = new MockedDate();
+    //let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
 
-        let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 }, keepUnmock);
+    let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 }, keepUnmock);
 
-        expect(dateInstanceWithDefault.getTime()).toEqual(1);
-        expect(Reflect.apply(dateInstanceWithDefault.getDay, new Date(), []) === new Date().getDay()).toEqual(true);
-    });
+    expect(dateInstanceWithDefault.getTime()).toEqual(1);
+    expect(Reflect.apply(dateInstanceWithDefault.getDay, new Date(), []) === new Date().getDay()).toEqual(true);
+  });
 });
 
 ```
@@ -155,4 +155,28 @@ describe('Your spec', () => {
     });
 });
 
+```
+
+Sometimes you need mock all methods in file and sometimes you need original method for some use cases. For example: Jest have method (mockFn.mockRestore)[https://jestjs.io/docs/en/mock-function-api.html#mockfnmockrestore] for restoring original method but it throws error for typescript. Luckily to-mock module will help you.
+
+```javascript
+//indexSpec.ts
+
+import { setGlobalMockMethod, toMockedInstance } from 'to-mock';
+import * as utils from '../utils';
+
+//jest.mock('../utils');
+//utils.once.mockRestore(); // throw Error in Typescript
+
+jest.mock('../utils', () => {
+  const original = jest.requireActual('../utils');
+
+  setGlobalMockMethod(jest.fn);
+
+  return toMockedInstance(
+    original,
+    { __original__: original },
+    ({ property }) => property === 'once'
+  );
+});
 ```
