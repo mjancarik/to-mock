@@ -152,7 +152,7 @@ test('create mocked instance from MyClass', t => {
   t.truthy(mockedInstance instanceof t.context.MyClass);
 });
 
-test('create mocked instance from MyClass with overrides', t => {
+test('create mocked instance from MyClass with overrides and without throwing error', t => {
   const mockedInstance = toMockedInstance(t.context.MyClass, {
     method: () => 1
   });
