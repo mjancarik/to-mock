@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/mjancarik/to-mock.svg?branch=master)](https://travis-ci.org/mjancarik/to-mock) [![Dependency Status](https://david-dm.org/mjancarik/to-mock.svg)](https://david-dm.org/mjancarik/to-mock) [![Coverage Status](https://coveralls.io/repos/github/mjancarik/to-mock/badge.svg?branch=master)](https://coveralls.io/github/mjancarik/to-mock?branch=master)
 [![NPM package version](https://img.shields.io/npm/v/to-mock/latest.svg)](https://www.npmjs.com/package/to-mock)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/to-mock.svg)
 
 The to-mock module help you with creating mocked classes and objects. So your tests are up to date with your defined classes because you don't have to keep mocks or interface for your tests. Then you can creating the unit tests for interface and not for implementation detail, your tests are more isolated and you can easy creating real unit tests.
 
@@ -157,7 +159,7 @@ describe('Your spec', () => {
 
 ```
 
-Sometimes you need mock all methods in file and sometimes you need original method for some use cases. For example: Jest have method (mockFn.mockRestore)[https://jestjs.io/docs/en/mock-function-api.html#mockfnmockrestore] for restoring original method but it throws error for typescript. Luckily to-mock module will help you.
+Sometimes you need mock all methods in file and sometimes you need original method for some use cases. For example: Jest have method [mockFn.mockRestore](https://jestjs.io/docs/en/mock-function-api.html#mockfnmockrestore) for restoring original method but it throws error for typescript. Luckily to-mock module will help you. You can see [source code](https://github.com/mjancarik/idle-tasks/blob/master/src/__tests__/IdleQueueSpec.ts)
 
 ```javascript
 //indexSpec.ts
