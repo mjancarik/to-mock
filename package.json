@@ -7,7 +7,9 @@
     "lint": "node_modules/.bin/eslint -c ./.eslintrc.js --fix './**/*.js' --ignore-path ./.prettierignore",
     "test": "node_modules/.bin/ava",
     "preversion": "npm test && npm run lint",
-    "postversion": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    "postversion": "npm run changelog && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
+    "commit": "node_modules/.bin/git-cz",
+    "changelog": "node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s -r 1"
   },
   "repository": {
     "type": "git",
@@ -40,14 +42,20 @@
   },
   "homepage": "https://github.com/mjancarik/to-mock#readme",
   "devDependencies": {
-    "ava": "^1.2.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
+    "ava": "^1.3.1",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "commitizen": "^3.0.7",
     "coveralls": "^3.0.3",
-    "eslint": "^5.15.0",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^5.15.1",
     "eslint-config-last": "^0.0.5",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
     "nyc": "^13.3.0",
     "prettier": "^1.16.4"
   },
@@ -55,9 +63,31 @@
     "babel": {
       "testOptions": {
         "plugins": [
-          "transform-es2015-modules-commonjs"
+          "@babel/plugin-transform-modules-commonjs"
         ]
       }
+    }
+  },
+  "lint-staged": {
+    "./toMock.js": [
+      "node_modules/.bin/eslint -c ./.eslintrc.js --fix --ignore-path ./.prettierignore",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "node_modules/.bin/lint-staged",
+      "commit-msg": "node_modules/.bin/commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }
