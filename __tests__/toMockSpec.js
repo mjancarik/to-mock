@@ -2,14 +2,11 @@ import test from 'ava';
 import toMock, {
   toMockedInstance,
   setGlobalKeepUnmock,
-  setGlobalMockMethod
+  setGlobalMockMethod,
+  objectKeepUnmock
 } from '../toMock';
 
 let shouldBeUndefined;
-
-function objectKeepUnmock({ original }) {
-  return original === Object.prototype;
-}
 
 test.beforeEach(t => {
   class Dummy {

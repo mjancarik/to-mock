@@ -140,6 +140,10 @@ function setGlobalMockMethod(mockMethod) {
   globalMockMethod = mockMethod;
 }
 
+function objectKeepUnmock({ original }) {
+  return original === Object.prototype;
+}
+
 exports.default = toMock;
 exports.toMock = toMock;
 exports.toMockedInstance = toMockedInstance;
@@ -149,3 +153,4 @@ exports.mockPrototypeChain = mockPrototypeChain;
 exports.mockOwnProperties = mockOwnProperties;
 exports.setGlobalKeepUnmock = setGlobalKeepUnmock;
 exports.setGlobalMockMethod = setGlobalMockMethod;
+exports.objectKeepUnmock = objectKeepUnmock;
