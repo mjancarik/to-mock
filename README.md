@@ -159,6 +159,8 @@ describe('Your spec', () => {
 
 ```
 
+### Typescript
+
 Sometimes you need mock all methods in file and sometimes you need original method for some use cases. For example: Jest have method [mockFn.mockRestore](https://jestjs.io/docs/en/mock-function-api.html#mockfnmockrestore) for restoring original method but it throws error for typescript. Luckily to-mock module will help you. You can see [source code](https://github.com/mjancarik/idle-tasks/blob/master/src/__tests__/IdleQueueSpec.ts)
 
 ```javascript
