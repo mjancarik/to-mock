@@ -19,6 +19,13 @@ You can add the to-mock to your project or testing tools using npm:
 npm i to-mock --save-dev
 ```
 
+## Examples
+
+1. [Jasmine](https://codesandbox.io/s/j3l8k6wlr5?fontsize=14) - example with jasmine and toMockedInstance
+2. [Jest/Typescript](https://github.com/mjancarik/idle-tasks/blob/master/src/__tests__/IdleQueueSpec.ts) - example with jest and typescript
+3. [AVA](https://github.com/mjancarik/to-mock/blob/master/__tests__/toMockSpec.js) - example with ava and self testing
+
+
 ## Usage
 
 The library is designed to be used in ES2015 environment. For older node <6 you must use [babel](https://babeljs.io/) and for older browser use [browserify](http://browserify.org/) with  [babel](https://babeljs.io/).
