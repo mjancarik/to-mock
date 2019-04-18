@@ -57,7 +57,7 @@ describe('Your spec', () => {
   let mockedInstance = new MockedMyArray();
 
   it('is instance of MyArray', () => {
-    expect(new MockedMyArray() instanceof MyArray).toBeTruthy();
+    expect(mockedInstance instanceof MyArray).toBeTruthy();
   });
 
   it('method not throw Error', () => {
