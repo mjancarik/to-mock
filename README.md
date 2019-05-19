@@ -9,7 +9,7 @@ The to-mock module help you with creating mocked classes and objects. So your te
 
 The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [tape](https://www.npmjs.com/package/tape), [jasmine](https://jasmine.github.io/), [mocha](https://mochajs.org/) and others. Even you may use it for mocking in [typescript](https://www.typescriptlang.org/). Those are other benefits for your unit tests because you can change test framework or language.
 
-You can mock Date, RegExp and other native object.
+You can mock [Date, RegExp and other native object](#mock-native-object).
 
 ## Installation
 
@@ -24,13 +24,20 @@ npm i to-mock --save-dev
 1. [Jasmine](https://codesandbox.io/s/j3l8k6wlr5?fontsize=14) - example with jasmine and toMockedInstance
 2. [Jest/Typescript](https://github.com/mjancarik/idle-tasks/blob/master/src/__tests__/IdleQueueSpec.ts) - example with jest and typescript
 3. [AVA](https://github.com/mjancarik/to-mock/blob/master/__tests__/toMockSpec.js) - example with ava and self testing
+4. [Best practice](#best-practice) - example with setting to-mock module for jest framework
 
+## API
+
+1. [toMock](#usage)
+2. [toMockedInstance](#tomockedinstance)
+3. [setGlobalKeepUnmock](#setglobalkeepunmock)
+4. [setGlobalMockMethod](#setglobalmockmethod)
 
 ## Usage
 
 The library is designed to be used in ES2015 environment. For older node <6 you must use [babel](https://babeljs.io/) and for older browser use [browserify](http://browserify.org/) with  [babel](https://babeljs.io/).
 
-```javascript
+``` javascript
 // MyArray.js
 export default class MyArray {
   constructor(array) {
@@ -48,13 +55,13 @@ import toMock from 'to-mock';
 
 describe('Your spec', () => {
 
+  // The MyArray class is not modified
+  const MockedMyArray = toMock(MyArray);
   //class MockedMyArray {
   //	constructor() {}
   //	clone() {}
   //}
-  // The MyArray class is not modified
-  const MockedMyArray = toMock(MyArray);
-  let mockedInstance = new MockedMyArray();
+  const mockedInstance = new MockedMyArray();
 
   it('is instance of MyArray', () => {
     expect(mockedInstance instanceof MyArray).toBeTruthy();
@@ -66,16 +73,18 @@ describe('Your spec', () => {
 });
 ```
 
+### Mock native object
+
 Example with overriding native Date object.
 
-```javascript
+``` javascript
 //MyDateSpec.js
 import toMock from 'to-mock';
 
 describe('Your spec', () => {
 
-  let MockedDate = toMock(Date);
-  let RealDate = Date;
+  const MockedDate = toMock(Date);
+  const RealDate = Date;
 
   beforeEach(() => {
     Date = MockedDate;
@@ -91,12 +100,13 @@ describe('Your spec', () => {
     expect(Date.now()).toEqual(1);
   });
 });
-
 ```
+
+### toMockedInstance
 
 Sometimes you want to working with mocked instance which will be defined some default values. You can use of course toMock function for that but better solution is use toMockedInstance function.
 
-```javascript
+``` javascript
 //MyDateSpec.js
 import toMock, { toMockedInstance } from 'to-mock';
 
@@ -104,20 +114,27 @@ describe('Your spec', () => {
 
   it('you can create mocked instance of date', () => {
     //let MockedDate = toMock(Date);
-    //let dateInstance = new MockedDate();
-    //let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
+    //let date = new MockedDate();
+    //let dateWithDefault = Object.assign(
+    //  date,
+    //  { getTime: () => 1 }
+    //);
 
-    let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 });
+    const dateWithDefault = toMockedInstance(
+      Date,
+      { getTime: () => 1 }
+    );
 
-    expect(dateInstanceWithDefault.getTime()).toEqual(1);
+    expect(dateWithDefault.getTime()).toEqual(1);
   });
 });
-
 ```
+
+### setGlobalKeepUnmock
 
 You want to working with unmocked methods and properties in very rare use case. For that case you can used globalKeepUnmock method or defined keepUnmock callback as other argument.
 
-```javascript
+``` javascript
 //MyDateSpec.js
 import toMock, { toMockedInstance, setGlobalKeepUnmock } from 'to-mock';
 
@@ -133,17 +150,33 @@ describe('Your spec', () => {
     //let MockedDate = toMock(Date);
     //setGlobalKeepUnmock(keepUnmock);
 
-    //let dateInstance = new MockedDate();
-    //let dateInstanceWithDefault = Object.assign(dateInstance, { getTime: () => 1 });
+    //let date = new MockedDate();
+    //let dateWithDefault = Object.assign(
+    //  date,
+    //  { getTime: () => 1 }
+    //);
 
-    let dateInstanceWithDefault = toMockedInstance(Date, { getTime: () => 1 }, keepUnmock);
+    let dateWithDefault = toMockedInstance(
+      Date,
+      { getTime: () => 1 },
+      keepUnmock
+    );
 
-    expect(dateInstanceWithDefault.getTime()).toEqual(1);
-    expect(Reflect.apply(dateInstanceWithDefault.getDay, new Date(), []) === new Date().getDay()).toEqual(true);
+    let dayFromMock = Reflect.apply(
+      dateWithDefault.getDay,
+      new Date(),
+      []
+    );
+    let dayFromDate = new Date().getDay();
+
+
+    expect(dateWithDefault.getTime()).toEqual(1);
+    expect(dayFromMock === dateFromDate).toEqual(true);
   });
 });
-
 ```
+
+### setGlobalMockMethod
 
 You can define a specific mock function used for all method mocks. This way, you can replace all these methods with jest.fn, or any other mock method, depending on your testing framework.
 
@@ -156,21 +189,20 @@ describe('Your spec', () => {
   it('you can create mocked instance of date', () => {
     setGlobalMockMethod(jest.fn);
 
-    let dateInstance = toMockedInstance(Date);
-    dateInstance.getTime();
+    let date = toMockedInstance(Date);
+    date.getTime();
 
     // You can use all jest.fn() related methods now
-    expect(dateInstance.getTime).toHaveBeenCalled();
+    expect(date.getTime).toHaveBeenCalled();
   });
 });
-
 ```
 
 ### Typescript
 
 Sometimes you need mock all methods in file and sometimes you need original method for some use cases. For example: Jest have method [mockFn.mockRestore](https://jestjs.io/docs/en/mock-function-api.html#mockfnmockrestore) for restoring original method but it throws error for typescript. Luckily to-mock module will help you. You can see [source code](https://github.com/mjancarik/idle-tasks/blob/master/src/__tests__/IdleQueueSpec.ts)
 
-```javascript
+``` javascript
 //indexSpec.ts
 
 import { setGlobalMockMethod, toMockedInstance } from 'to-mock';
@@ -190,6 +222,31 @@ jest.mock('../utils', () => {
     ({ property }) => property === 'once'
   );
 });
+```
+
+### Best practice
+
+We use to-mock module for unit tests and integration tests in large applications. We share you our setup file for jest framework which you can configure through [setupFiles](https://jestjs.io/docs/en/configuration#setupfiles-array).
+
+``` javascript
+// setupJest.js
+
+import {
+  objectKeepUnmock,
+  setGlobalKeepUnmock,
+  setGlobalMockMethod
+} from 'to-mock';
+
+// every method is replaced to jest.fn()
+setGlobalMockMethod(jest.fn);
+// native object method keep unmock
+setGlobalKeepUnmock(objectKeepUnmock);
+
+
+// *Spec.js
+import { toMockedInstance } from 'to-mock';
+
+// we use toMockedInstance almost everywhere
 ```
 
 ## Contributing
