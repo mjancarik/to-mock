@@ -1,3 +1,8 @@
+<a name="1.5.4"></a>
+## [1.5.4](https://github.com/mjancarik/to-mock/compare/1.5.3...1.5.4) (2019-06-10)
+
+
+
 <a name="1.5.3"></a>
 ## [1.5.3](https://github.com/mjancarik/to-mock/compare/1.5.2...1.5.3) (2019-05-19)
 

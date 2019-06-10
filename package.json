@@ -1,6 +1,6 @@
 {
   "name": "to-mock",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "The utility to mock class and objects. You can use mocked classes and objects for your unit and integration tests",
   "main": "toMock.js",
   "scripts": {
