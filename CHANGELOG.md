@@ -1,3 +1,13 @@
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/mjancarik/to-mock/compare/1.5.5...1.6.0) (2020-01-16)
+
+
+### Bug Fixes
+
+* original class constructor prototype is cloned ([a7b2c4f](https://github.com/mjancarik/to-mock/commit/a7b2c4f))
+
+
+
 <a name="1.5.5"></a>
 ## [1.5.5](https://github.com/mjancarik/to-mock/compare/1.5.4...1.5.5) (2020-01-01)
 
