@@ -42,9 +42,9 @@
   },
   "homepage": "https://github.com/mjancarik/to-mock#readme",
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.7.5",
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "ava": "^2.4.0",
     "babel-eslint": "^10.0.3",
     "commitizen": "^4.0.3",
@@ -54,7 +54,7 @@
     "eslint-config-last": "^0.0.5",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "husky": "^3.1.0",
+    "husky": "^4.0.10",
     "lint-staged": "^9.5.0",
     "nyc": "^15.0.0",
     "prettier": "^1.19.1"
