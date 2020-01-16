@@ -38,8 +38,11 @@ function toMockedInstance(arg, overrides = {}, keepUnmock) {
 function mockClass(ClassConstructor, keepUnmock) {
   class Mock {}
 
-  Reflect.setPrototypeOf(Mock.prototype, ClassConstructor.prototype);
-  Reflect.setPrototypeOf(Mock, ClassConstructor);
+  Reflect.setPrototypeOf(
+    Mock.prototype,
+    Object.create(ClassConstructor.prototype)
+  );
+  Reflect.setPrototypeOf(Mock, Object.create(ClassConstructor));
 
   mockPrototypeChain(Mock.prototype, keepUnmock);
   mockStatic(ClassConstructor, Mock, keepUnmock);
@@ -144,6 +147,10 @@ function objectKeepUnmock({ original }) {
   return original === Object.prototype;
 }
 
+function functionKeepUnmock({ original }) {
+  return original === Function.prototype;
+}
+
 exports.default = toMock;
 exports.toMock = toMock;
 exports.toMockedInstance = toMockedInstance;
@@ -154,3 +161,4 @@ exports.mockOwnProperties = mockOwnProperties;
 exports.setGlobalKeepUnmock = setGlobalKeepUnmock;
 exports.setGlobalMockMethod = setGlobalMockMethod;
 exports.objectKeepUnmock = objectKeepUnmock;
+exports.functionKeepUnmock = functionKeepUnmock;

@@ -3,7 +3,8 @@ import toMock, {
   toMockedInstance,
   setGlobalKeepUnmock,
   setGlobalMockMethod,
-  objectKeepUnmock
+  objectKeepUnmock,
+  functionKeepUnmock
 } from '../toMock';
 
 let shouldBeUndefined;
@@ -82,11 +83,19 @@ test('the mocked class is instance of provided class', t => {
   t.truthy(instance instanceof t.context.Dummy);
 });
 
-test('The original prototype chain is not modified', t => {
+test('the original prototype chain is not modified', t => {
+  toMock(t.context.MyClass, functionKeepUnmock);
+
   t.truthy(t.context.MyClass.prototype.method.name === 'method');
 });
 
-test('The mocked prototype chain is modified', t => {
+test('the original class is not modified', t => {
+  toMock(t.context.MyClass, functionKeepUnmock);
+
+  t.snapshot(t.context.MyClass.prototype.constructor.toString());
+});
+
+test('the mocked prototype chain is modified', t => {
   t.truthy(toMock(t.context.MyClass).prototype.method.name === 'mockMethod');
 });
 
