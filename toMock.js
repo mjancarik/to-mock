@@ -6,7 +6,6 @@ let globalKeepUnmock = null;
 let globalMockMethod = () => {
   return function mockMethod() {};
 };
-const MOCKED_PROTOTYPE_CHAIN = Symbol('mockedPrototypeChain');
 
 function toMock(arg, keepUnmock) {
   if (typeof arg === 'function') {
@@ -70,24 +69,10 @@ function mockPrototypeChain(prototype, keepUnmock) {
   let originalPrototype = prototype;
 
   while (prototype) {
-    let clonePrototype = Object.create(prototype, {
-      [MOCKED_PROTOTYPE_CHAIN]: {
-        value: true,
-        enumerable: false
-      }
-    });
+    let clonePrototype = Object.create(prototype);
 
     mockOwnProperties(prototype, clonePrototype, keepUnmock);
-
     Reflect.setPrototypeOf(originalPrototype, clonePrototype);
-
-    if (
-      originalPrototype[MOCKED_PROTOTYPE_CHAIN] &&
-      prototype[MOCKED_PROTOTYPE_CHAIN] &&
-      originalPrototype !== prototype
-    ) {
-      return;
-    }
 
     originalPrototype = prototype;
     prototype = Reflect.getPrototypeOf(prototype);

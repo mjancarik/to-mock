@@ -247,3 +247,19 @@ test('the class methods should be updated with globalMockMethod', t => {
 
   t.truthy(instance.sampleClassMethod === mockMethod);
 });
+
+test('the class methods should be mocked for all mock created from toMockedInstance method', t => {
+  class SampleClass {
+    sampleClassMethod() {
+      throw new Error('');
+    }
+  }
+
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  let instance = toMockedInstance(SampleClass);
+
+  t.notThrows(() => {
+    instance.sampleClassMethod();
+  });
+});
