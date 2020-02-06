@@ -71,8 +71,7 @@
   },
   "lint-staged": {
     "./toMock.js": [
-      "node_modules/.bin/eslint -c ./.eslintrc.js --fix --ignore-path ./.prettierignore",
-      "git add"
+      "node_modules/.bin/eslint -c ./.eslintrc.js --fix --ignore-path ./.prettierignore"
     ]
   },
   "config": {
