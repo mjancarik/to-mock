@@ -1,3 +1,13 @@
+<a name="1.6.1"></a>
+## [1.6.1](https://github.com/mjancarik/to-mock/compare/1.6.0...1.6.1) (2020-02-06)
+
+
+### Bug Fixes
+
+* all mocks created from toMockedInstance have got mocked methods ([c2e685d](https://github.com/mjancarik/to-mock/commit/c2e685d))
+
+
+
 <a name="1.6.0"></a>
 # [1.6.0](https://github.com/mjancarik/to-mock/compare/1.5.5...1.6.0) (2020-01-16)
 
