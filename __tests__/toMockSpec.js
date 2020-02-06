@@ -147,9 +147,12 @@ test('object mocked method is not throw error', t => {
 });
 
 test('throw error for unsupported type', t => {
-  t.throws(() => {
-    toMock(1);
-  }, TypeError);
+  t.throws(
+    () => {
+      toMock(1);
+    },
+    { instanceOf: TypeError }
+  );
 });
 
 test('create mocked instance from MyClass', t => {
