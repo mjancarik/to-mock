@@ -2,6 +2,8 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+const MOCKED_PROTOTYPE_CHAIN = Symbol('mockedPrototypeChain');
+
 let globalKeepUnmock = null;
 let globalMockMethod = () => {
   return function mockMethod() {};
@@ -37,11 +39,8 @@ function toMockedInstance(arg, overrides = {}, keepUnmock) {
 function mockClass(ClassConstructor, keepUnmock) {
   class Mock {}
 
-  Reflect.setPrototypeOf(
-    Mock.prototype,
-    Object.create(ClassConstructor.prototype)
-  );
-  Reflect.setPrototypeOf(Mock, Object.create(ClassConstructor));
+  Reflect.setPrototypeOf(Mock.prototype, ClassConstructor.prototype);
+  Reflect.setPrototypeOf(Mock, ClassConstructor);
 
   mockPrototypeChain(Mock.prototype, keepUnmock);
   mockStatic(ClassConstructor, Mock, keepUnmock);
@@ -69,10 +68,23 @@ function mockPrototypeChain(prototype, keepUnmock) {
   let originalPrototype = prototype;
 
   while (prototype) {
-    let clonePrototype = Object.create(prototype);
+    let clonePrototype = Object.create(prototype, {
+      [MOCKED_PROTOTYPE_CHAIN]: {
+        value: true,
+        enumerable: false
+      }
+    });
 
     mockOwnProperties(prototype, clonePrototype, keepUnmock);
     Reflect.setPrototypeOf(originalPrototype, clonePrototype);
+
+    if (
+      originalPrototype[MOCKED_PROTOTYPE_CHAIN] &&
+      prototype[MOCKED_PROTOTYPE_CHAIN] &&
+      originalPrototype !== prototype
+    ) {
+      return;
+    }
 
     originalPrototype = prototype;
     prototype = Reflect.getPrototypeOf(prototype);

@@ -266,3 +266,46 @@ test('the class methods should be mocked for all mock created from toMockedInsta
     instance.sampleClassMethod();
   });
 });
+
+test('the class methods should be mocked for all mock created from toMockedInstance method with performance optimization', t => {
+  class SampleClass {
+    sampleClassMethod() {
+      throw new Error('');
+    }
+  }
+
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  toMockedInstance(SampleClass);
+  let instance = toMockedInstance(SampleClass);
+
+  t.notThrows(() => {
+    instance.sampleClassMethod();
+  });
+});
