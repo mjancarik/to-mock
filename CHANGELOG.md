@@ -1,3 +1,13 @@
+<a name="1.6.2"></a>
+## [1.6.2](https://github.com/mjancarik/to-mock/compare/1.6.1...1.6.2) (2020-02-14)
+
+
+### Bug Fixes
+
+* problem with exhausting memory and cpu for mocking prototype chain ([b698b62](https://github.com/mjancarik/to-mock/commit/b698b62))
+
+
+
 <a name="1.6.1"></a>
 ## [1.6.1](https://github.com/mjancarik/to-mock/compare/1.6.0...1.6.1) (2020-02-06)
 
