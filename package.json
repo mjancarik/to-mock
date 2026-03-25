@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "node_modules/.bin/eslint -c ./.eslintrc.js --fix './**/*.js' --ignore-path ./.prettierignore",
     "test": "node_modules/.bin/ava",
+    "vitest": "vitest run",
     "preversion": "npm test && npm run lint",
     "postversion": "npm run changelog && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
     "commit": "node_modules/.bin/git-cz",
@@ -58,7 +59,8 @@
     "husky": "^4.2.1",
     "lint-staged": "^10.0.7",
     "nyc": "^15.0.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "vitest": "^4.1.1"
   },
   "ava": {
     "babel": {
