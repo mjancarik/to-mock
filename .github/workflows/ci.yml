@@ -50,6 +50,8 @@ jobs:
 
       - name: Unit tests
         run: npm test
+      - name: Vitest compatibility tests
+        run: npm run vitest
       - name: Linter
         run: npm run lint
       - name: Build
