@@ -20,7 +20,8 @@
     "test": "node --test --experimental-test-snapshots ./src/__tests__/toMockSpec.node.mjs",
     "vitest": "vitest run",
     "preversion": "npm test && npm run lint && npm run build",
-    "postversion": "npm run changelog && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
+    "version": "npm run changelog && git add CHANGELOG.md",
+    "postversion": "git push && git push --tags",
     "prepare": "husky",
     "commit": "node_modules/.bin/git-cz",
     "changelog": "node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s -r 1"

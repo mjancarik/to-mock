@@ -1,6 +1,7 @@
 /src
 /coverage
 /examples
+/utils
 .gitignore
 .npmignore
 .npmrc
