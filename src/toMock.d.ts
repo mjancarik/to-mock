@@ -68,5 +68,3 @@ export function setGlobalMockMethod(mockMethod: MockMethodFactory): void;
 export function objectKeepUnmock(args: KeepUnmockArgs): boolean;
 
 export function functionKeepUnmock(args: KeepUnmockArgs): boolean;
-
-export default toMock;

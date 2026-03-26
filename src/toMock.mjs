@@ -252,5 +252,3 @@ export function objectKeepUnmock({ original }) {
 export function functionKeepUnmock({ original }) {
   return original === Function.prototype;
 }
-
-export default toMock;
