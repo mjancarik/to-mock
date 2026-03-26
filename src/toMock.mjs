@@ -1,9 +1,10 @@
 const MOCKED_PROTOTYPE_CHAIN = Symbol('mockedPrototypeChain');
 
-let globalKeepUnmock = objectKeepUnmock;
-let globalMockMethod = () => {
-  return function mockMethod() {};
+globalThis.__toMock__ ??= {
+  keepUnmock: objectKeepUnmock,
+  mockMethod: () => function mockMethod() {},
 };
+const _globals = globalThis.__toMock__;
 
 /**
  * Returns a mocked version of the given class or object.
@@ -155,7 +156,7 @@ export function mockPrototypeChain(prototype, keepUnmock) {
  * Iterates over the own property descriptors of `original` and mocks each
  * eligible property onto `mock`.
  * - Accessor properties (get/set) are replaced with a simple value holder.
- * - Method properties are replaced with the result of `globalMockMethod()`.
+ * - Method properties are replaced with the result of `_globals.mockMethod()`.
  * - Non-function value properties are left untouched.
  *
  * @param {object} original - The source object whose properties are inspected.
@@ -166,7 +167,7 @@ export function mockPrototypeChain(prototype, keepUnmock) {
 export function mockOwnProperties(original, mock, keepUnmock) {
   const isKeepUnMockDefined = keepUnmock && typeof keepUnmock === 'function';
   const isGlobalKeepUnMockDefined =
-    globalKeepUnmock && typeof globalKeepUnmock === 'function';
+    _globals.keepUnmock && typeof _globals.keepUnmock === 'function';
 
   Object.entries(Object.getOwnPropertyDescriptors(original)).forEach(
     ([property, descriptor]) => {
@@ -175,7 +176,7 @@ export function mockOwnProperties(original, mock, keepUnmock) {
 
         if (
           (isKeepUnMockDefined && keepUnmock(keepUnmockArgs)) ||
-          (isGlobalKeepUnMockDefined && globalKeepUnmock(keepUnmockArgs))
+          (isGlobalKeepUnMockDefined && _globals.keepUnmock(keepUnmockArgs))
         ) {
           return;
         }
@@ -197,7 +198,7 @@ export function mockOwnProperties(original, mock, keepUnmock) {
             }),
           );
         } else if (typeof original[property] === 'function') {
-          mock[property] = globalMockMethod();
+          mock[property] = _globals.mockMethod();
         }
       } catch (_) {} // eslint-disable-line no-empty
     },
@@ -214,7 +215,7 @@ export function mockOwnProperties(original, mock, keepUnmock) {
  *     returns `true` to leave the property unmocked.
  */
 export function setGlobalKeepUnmock(callback) {
-  globalKeepUnmock = callback;
+  _globals.keepUnmock = callback;
 }
 
 /**
@@ -226,7 +227,7 @@ export function setGlobalKeepUnmock(callback) {
  *   - A factory function that returns the mock function to assign.
  */
 export function setGlobalMockMethod(mockMethod) {
-  globalMockMethod = mockMethod;
+  _globals.mockMethod = mockMethod;
 }
 
 /**
