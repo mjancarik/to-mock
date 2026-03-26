@@ -1,3 +1,9 @@
+## [2.0.1](https://github.com/mjancarik/to-mock/compare/v2.0.0...v2.0.1) (2026-03-26)
+
+
+### Bug Fixes
+
+* use globalThis for global variables ([0616ab0](https://github.com/mjancarik/to-mock/commit/0616ab0e6a8ba146f5cd606443d7892726374b8f))
 # [2.0.0](https://github.com/mjancarik/to-mock/compare/1.6.2...2.0.0) (2026-03-26)
 
 
