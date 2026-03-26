@@ -1,21 +1,16 @@
 # to-mock
 
-[![Build Status](https://travis-ci.org/mjancarik/to-mock.svg?branch=master)](https://travis-ci.org/mjancarik/to-mock) [![Dependency Status](https://david-dm.org/mjancarik/to-mock.svg)](https://david-dm.org/mjancarik/to-mock) [![Coverage Status](https://coveralls.io/repos/github/mjancarik/to-mock/badge.svg?branch=master)](https://coveralls.io/github/mjancarik/to-mock?branch=master)
 [![NPM package version](https://img.shields.io/npm/v/to-mock/latest.svg)](https://www.npmjs.com/package/to-mock)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/to-mock.svg)
 
-The to-mock module help you with creating mocked classes and objects. So your tests are up to date with your defined classes because you don't have to keep mocks or interface for your tests. Then you can creating the unit tests for interface and not for implementation detail, your tests are more isolated and you can easy creating real unit tests.
+The to-mock module helps you create mocked classes and objects. Your tests stay up to date with your defined classes automatically — no need to maintain separate mocks or interfaces. This lets you write unit tests against a contract rather than an implementation detail, keeping your tests isolated and easy to maintain.
 
-The javascript to-mock module can be used with any test framework like [jest](https://facebook.github.io/jest/), [ava](https://github.com/avajs/ava), [tape](https://www.npmjs.com/package/tape), [jasmine](https://jasmine.github.io/), [mocha](https://mochajs.org/) and others. Even you may use it for mocking in [typescript](https://www.typescriptlang.org/). Those are other benefits for your unit tests because you can change test framework or language.
+Works with any test framework: [jest](https://jestjs.io/), [vitest](https://vitest.dev/), [node:test](https://nodejs.org/api/test.html), [tape](https://www.npmjs.com/package/tape), [jasmine](https://jasmine.github.io/), [mocha](https://mochajs.org/) and others. Includes [TypeScript](https://www.typescriptlang.org/) type declarations out of the box.
 
-You can mock [Date, RegExp and other native object](#mock-native-object).
+You can mock [Date, RegExp and other native objects](#mock-native-object).
 
 ## Installation
 
-You can add the to-mock to your project or testing tools using npm:
-
-``` shell
+```shell
 npm i to-mock --save-dev
 ```
 
@@ -23,21 +18,22 @@ npm i to-mock --save-dev
 
 1. [Jasmine](https://codesandbox.io/s/j3l8k6wlr5?fontsize=14) - example with jasmine and toMockedInstance
 2. [Jest/Typescript](https://github.com/mjancarik/idle-tasks/blob/master/src/__tests__/IdleQueueSpec.ts) - example with jest and typescript
-3. [AVA](https://github.com/mjancarik/to-mock/blob/master/__tests__/toMockSpec.js) - example with ava and self testing
-4. [Best practice](#best-practice) - example with setting to-mock module for jest framework
+3. [Best practice](#best-practice) - example with setting to-mock module for jest framework
 
 ## API
 
-1. [toMock](#usage)
+1. [toMock](#tomock)
 2. [toMockedInstance](#tomockedinstance)
 3. [setGlobalKeepUnmock](#setglobalkeepunmock)
 4. [setGlobalMockMethod](#setglobalmockmethod)
+5. [objectKeepUnmock](#objectkeepunmock)
+6. [functionKeepUnmock](#functionkeepunmock)
 
-## Usage
+## toMock
 
-The library is designed to be used in ES2015 environment. For older node <6 you must use [babel](https://babeljs.io/) and for older browser use [browserify](http://browserify.org/) with  [babel](https://babeljs.io/).
+The library ships as both ESM (`dist/index.mjs`) and CommonJS (`dist/index.cjs`) with bundled TypeScript declarations (`dist/index.d.ts`).
 
-``` javascript
+```javascript
 // MyArray.js
 export default class MyArray {
   constructor(array) {
@@ -49,25 +45,20 @@ export default class MyArray {
   }
 }
 
-//MyArraySpec.js
-import MyArray from './MyArray';
-import toMock from 'to-mock';
+// MyArray.test.js
+import MyArray from './MyArray.js';
+import { toMock } from 'to-mock';
 
 describe('Your spec', () => {
-
-  // The MyArray class is not modified
+  // MyArray is not modified — a new mocked subclass is returned
   const MockedMyArray = toMock(MyArray);
-  //class MockedMyArray {
-  //	constructor() {}
-  //	clone() {}
-  //}
   const mockedInstance = new MockedMyArray();
 
   it('is instance of MyArray', () => {
     expect(mockedInstance instanceof MyArray).toBeTruthy();
   });
 
-  it('method not throw Error', () => {
+  it('method does not throw', () => {
     expect(() => mockedInstance.clone()).not.toThrow();
   });
 });
@@ -75,14 +66,11 @@ describe('Your spec', () => {
 
 ### Mock native object
 
-Example with overriding native Date object.
-
-``` javascript
-//MyDateSpec.js
-import toMock from 'to-mock';
+```javascript
+// MyDate.test.js
+import { toMock } from 'to-mock';
 
 describe('Your spec', () => {
-
   const MockedDate = toMock(Date);
   const RealDate = Date;
 
@@ -92,10 +80,10 @@ describe('Your spec', () => {
 
   afterEach(() => {
     Date = RealDate;
-  };)
+  });
 
   it('you can mock date', () => {
-    spyOn(MockedDate, 'now').and.returnValue(1);
+    jest.spyOn(MockedDate, 'now').mockReturnValue(1);
 
     expect(Date.now()).toEqual(1);
   });
@@ -104,26 +92,14 @@ describe('Your spec', () => {
 
 ### toMockedInstance
 
-Sometimes you want to working with mocked instance which will be defined some default values. You can use of course toMock function for that but better solution is use toMockedInstance function.
+Creates a mocked instance directly, with optional property overrides applied on top. Equivalent to calling `toMock`, constructing an instance, and applying `Object.assign` — but in one step.
 
-``` javascript
-//MyDateSpec.js
-import toMock, { toMockedInstance } from 'to-mock';
+```javascript
+import { toMockedInstance } from 'to-mock';
 
 describe('Your spec', () => {
-
-  it('you can create mocked instance of date', () => {
-    //let MockedDate = toMock(Date);
-    //let date = new MockedDate();
-    //let dateWithDefault = Object.assign(
-    //  date,
-    //  { getTime: () => 1 }
-    //);
-
-    const dateWithDefault = toMockedInstance(
-      Date,
-      { getTime: () => 1 }
-    );
+  it('creates a mocked Date instance with a default getTime', () => {
+    const dateWithDefault = toMockedInstance(Date, { getTime: () => 1 });
 
     expect(dateWithDefault.getTime()).toEqual(1);
   });
@@ -132,84 +108,86 @@ describe('Your spec', () => {
 
 ### setGlobalKeepUnmock
 
-You want to working with unmocked methods and properties in very rare use case. For that case you can used globalKeepUnmock method or defined keepUnmock callback as other argument.
+Sets a global predicate applied to every `toMock` / `toMockedInstance` call that does not supply its own `keepUnmock` argument. Return `true` from the predicate to leave a property unmocked.
 
-``` javascript
-//MyDateSpec.js
-import toMock, { toMockedInstance, setGlobalKeepUnmock } from 'to-mock';
+In v2, [`objectKeepUnmock`](#objectkeepunmock) is active by default — you only need to call this to override or clear the global predicate.
 
-describe('Your spec', () => {
+Two built-in predicates are provided: [`objectKeepUnmock`](#objectkeepunmock) and [`functionKeepUnmock`](#functionkeepunmock).
 
-  it('you can create mocked instance of date', () => {
-    function keepUnmock({ property, descriptor, original, mock }) {
-      return property === 'getDay';
-    }
+```javascript
+import { toMockedInstance, setGlobalKeepUnmock, objectKeepUnmock } from 'to-mock';
 
-    //let MockedDate = toMock(Date, keepUnmock);
-    //or    
-    //let MockedDate = toMock(Date);
-    //setGlobalKeepUnmock(keepUnmock);
+// Preserve Object.prototype methods (toString, hasOwnProperty, …) globally
+setGlobalKeepUnmock(objectKeepUnmock);
 
-    //let date = new MockedDate();
-    //let dateWithDefault = Object.assign(
-    //  date,
-    //  { getTime: () => 1 }
-    //);
+// Per-call keepUnmock — keep getDay unmocked on this instance only
+function keepGetDay({ property }) {
+  return property === 'getDay';
+}
 
-    let dateWithDefault = toMockedInstance(
-      Date,
-      { getTime: () => 1 },
-      keepUnmock
-    );
+const dateWithDefault = toMockedInstance(
+  Date,
+  { getTime: () => 1 },
+  keepGetDay,
+);
 
-    let dayFromMock = Reflect.apply(
-      dateWithDefault.getDay,
-      new Date(),
-      []
-    );
-    let dayFromDate = new Date().getDay();
+const dayFromMock = Reflect.apply(dateWithDefault.getDay, new Date(), []);
+const dayFromDate = new Date().getDay();
 
-
-    expect(dateWithDefault.getTime()).toEqual(1);
-    expect(dayFromMock === dateFromDate).toEqual(true);
-  });
-});
+expect(dateWithDefault.getTime()).toEqual(1);
+expect(dayFromMock === dayFromDate).toEqual(true);
 ```
 
 ### setGlobalMockMethod
 
-You can define a specific mock function used for all method mocks. This way, you can replace all these methods with jest.fn, or any other mock method, depending on your testing framework.
+Overrides the factory used to produce mock functions. The factory is called once per mocked method and must return a function. Defaults to `() => function mockMethod() {}`.
+
+Use this to integrate with your testing framework's spy/mock system:
 
 ```javascript
-//MyDateSpec.js
 import { toMockedInstance, setGlobalMockMethod } from 'to-mock';
 
-describe('Your spec', () => {
+setGlobalMockMethod(jest.fn);
 
-  it('you can create mocked instance of date', () => {
-    setGlobalMockMethod(jest.fn);
+test('tracks calls', () => {
+  const date = toMockedInstance(Date);
+  date.getTime();
 
-    let date = toMockedInstance(Date);
-    date.getTime();
-
-    // You can use all jest.fn() related methods now
-    expect(date.getTime).toHaveBeenCalled();
-  });
+  // All jest.fn() methods are available
+  expect(date.getTime).toHaveBeenCalled();
 });
 ```
 
-### Typescript
+### objectKeepUnmock
 
-Sometimes you need mock all methods in file and sometimes you need original method for some use cases. For example: Jest have method [mockFn.mockRestore](https://jestjs.io/docs/en/mock-function-api.html#mockfnmockrestore) for restoring original method but it throws error for typescript. Luckily to-mock module will help you. You can see [source code](https://github.com/mjancarik/idle-tasks/blob/master/src/__tests__/IdleQueueSpec.ts)
+Built-in predicate that preserves all properties inherited from `Object.prototype` (e.g. `toString`, `hasOwnProperty`). This is the **default global predicate in v2** — it is active without any setup.
 
-``` javascript
-//indexSpec.ts
+Pass it as the `keepUnmock` argument for per-call use, or call `setGlobalKeepUnmock(objectKeepUnmock)` to restore it after clearing.
 
+```javascript
+import { toMock, objectKeepUnmock } from 'to-mock';
+
+// per-call:
+const Mocked = toMock(MyClass, objectKeepUnmock);
+```
+
+### functionKeepUnmock
+
+Built-in predicate that preserves all properties inherited from `Function.prototype` (e.g. `call`, `apply`, `bind`). Useful when you need the constructor chain to remain functional.
+
+```javascript
+import { toMock, functionKeepUnmock } from 'to-mock';
+
+const Mocked = toMock(MyClass, functionKeepUnmock);
+```
+
+### TypeScript
+
+The package ships with TypeScript declarations — no additional `@types` package needed.
+
+```typescript
 import { setGlobalMockMethod, toMockedInstance } from 'to-mock';
-import * as utils from '../utils';
-
-//jest.mock('../utils');
-//utils.once.mockRestore(); // throw Error in Typescript
+import * as utils from '../utils.js';
 
 jest.mock('../utils', () => {
   const original = jest.requireActual('../utils');
@@ -219,47 +197,66 @@ jest.mock('../utils', () => {
   return toMockedInstance(
     original,
     { __original__: original },
-    ({ property }) => property === 'once'
+    ({ property }) => property === 'once',
   );
 });
 ```
 
 ### Best practice
 
-We use to-mock module for unit tests and integration tests in large applications. We share you our setup file for jest framework which you can configure through [setupFiles](https://jestjs.io/docs/en/configuration#setupfiles-array).
+Recommended setup file for jest (configured via [setupFiles](https://jestjs.io/docs/configuration#setupfiles-array)). The same pattern works for vitest with its [`setupFiles`](https://vitest.dev/config/#setupfiles) option. For `node:test`, call the setup file manually before running tests.
 
-``` javascript
+```javascript
 // setupJest.js
+import { setGlobalMockMethod } from 'to-mock';
 
-import {
-  objectKeepUnmock,
-  setGlobalKeepUnmock,
-  setGlobalMockMethod
-} from 'to-mock';
-
-// every method is replaced to jest.fn()
+// Replace every mocked method with jest.fn()
 setGlobalMockMethod(jest.fn);
-// native object method keep unmock
-setGlobalKeepUnmock(objectKeepUnmock);
+```
 
-
+```javascript
 // *Spec.js
 import { toMockedInstance } from 'to-mock';
 
-// we use toMockedInstance almost everywhere
+// Use toMockedInstance everywhere — no need to call new
+```
+
+## Migration to v2
+
+### Named exports only — default export removed
+
+v1 exported `toMock` as the default export. v2 removes the default export; use the named export instead.
+
+```javascript
+// v1
+import toMock from 'to-mock';
+
+// v2
+import { toMock } from 'to-mock';
+```
+
+### `objectKeepUnmock` is now the default global predicate
+
+In v1, `Object.prototype` methods (e.g. `toString`, `hasOwnProperty`) were mocked by default. In v2, `objectKeepUnmock` is applied globally out of the box — `Object.prototype` methods are preserved without any setup.
+
+If you need the v1 behaviour (mock everything including `Object.prototype`), call:
+
+```javascript
+import { setGlobalKeepUnmock } from 'to-mock';
+
+setGlobalKeepUnmock(null);
 ```
 
 ## Contributing
 
 Contributing to this repository is done via [Pull-Requests](https://github.com/mjancarik/to-mock/pulls).
-Any commit that you make must follow simple rules that are automatically validated upon committing.
-1. type of change (`build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`)
-2. scope of change in brackets `( ... )`. This should be one-word description of what part of the repository you've changed.
-3. colon `:`
-4. message (lower-case)
+Any commit must follow these rules (validated automatically on commit):
 
-`fix(iframe): message`
+1. **type** (`build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`)
+2. **scope** in brackets — one-word description of the changed area
+3. **colon** `:`
+4. **message** (lower-case)
 
-`feat(loader): message`
+Examples: `fix(mock): handle null prototype`, `feat(types): add keepUnmock overload`
 
-To simplify this process you can use `npm run commit` command that will interactively prompt for details and will also run linter before you commit. For more information see [commitizen/cz-cli](https://github.com/commitizen/cz-cli) repository.
+Use `npm run commit` for an interactive prompt that validates and formats the message automatically. See [commitizen/cz-cli](https://github.com/commitizen/cz-cli) for details.
