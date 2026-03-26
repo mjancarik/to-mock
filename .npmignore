@@ -13,4 +13,5 @@ README.md
 CHANGELOG.md
 tsup.config.mjs
 biome.json
+vitest.config.ts
 tsconfig.json
