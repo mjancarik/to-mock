@@ -2,13 +2,26 @@
   "name": "to-mock",
   "version": "1.6.2",
   "description": "The utility to mock class and objects. You can use mocked classes and objects for your unit and integration tests",
-  "main": "toMock.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
-    "lint": "node_modules/.bin/eslint -c ./.eslintrc.js --fix './**/*.js' --ignore-path ./.prettierignore",
-    "test": "node_modules/.bin/ava",
+    "build": "node_modules/.bin/tsup",
+    "dev": "node_modules/.bin/tsup --watch",
+    "lint": "biome check --no-errors-on-unmatched",
+    "lint:fix": "npm run lint -- --fix --unsafe",
+    "test": "node --test --experimental-test-snapshots ./src/__tests__/toMockSpec.node.mjs",
     "vitest": "vitest run",
-    "preversion": "npm test && npm run lint",
+    "preversion": "npm test && npm run lint && npm run build",
     "postversion": "npm run changelog && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
+    "prepare": "husky",
     "commit": "node_modules/.bin/git-cz",
     "changelog": "node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s -r 1"
   },
@@ -43,38 +56,18 @@
   },
   "homepage": "https://github.com/mjancarik/to-mock#readme",
   "devDependencies": {
-    "@ava/babel": "^1.0.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "ava": "^3.2.0",
-    "babel-eslint": "^10.0.3",
-    "commitizen": "^4.0.3",
-    "coveralls": "^3.0.9",
-    "cz-conventional-changelog": "^3.1.0",
-    "eslint": "^6.8.0",
-    "eslint-config-last": "^0.0.5",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "husky": "^4.2.1",
-    "lint-staged": "^10.0.7",
-    "nyc": "^15.0.0",
-    "prettier": "^1.19.1",
+    "@biomejs/biome": "^2.4.9",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "tsup": "^8.5.1",
     "vitest": "^4.1.1"
   },
-  "ava": {
-    "babel": {
-      "testOptions": {
-        "plugins": [
-          "@babel/plugin-transform-modules-commonjs"
-        ]
-      }
-    }
-  },
   "lint-staged": {
-    "./toMock.js": [
-      "node_modules/.bin/eslint -c ./.eslintrc.js --fix --ignore-path ./.prettierignore"
-    ]
+    "**/*.{mjs,json}": "npm run lint"
   },
   "config": {
     "commitizen": {
@@ -85,11 +78,5 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "node_modules/.bin/lint-staged",
-      "commit-msg": "node_modules/.bin/commitlint -E HUSKY_GIT_PARAMS"
-    }
   }
 }

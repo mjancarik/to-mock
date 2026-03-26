@@ -1,0 +1,3 @@
+exports[`the original class is not modified 1`] = `
+"class MyClass extends Dummy {\\n    constructor(array) {\\n      super(array);\\n      this.array = array.slice();\\n    }\\n\\n    static get black() {\\n      return 'black';\\n    }\\n\\n    get isEmpty() {\\n      shouldBeUndefined = 1;\\n\\n      return this.array.length === 0;\\n    }\\n\\n    get count() {\\n      return this.array.length;\\n    }\\n\\n    set count(value) {\\n      this.array = new Array(value);\\n    }\\n\\n    static staticMethod(array) {\\n      array.slice();\\n    }\\n\\n    method() {\\n      this.array.slice();\\n    }\\n  }"
+`;
