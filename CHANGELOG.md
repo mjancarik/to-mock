@@ -1,3 +1,16 @@
+# [2.0.0](https://github.com/mjancarik/to-mock/compare/1.6.2...2.0.0) (2026-03-26)
+
+
+### Features
+
+* migrate to esm source, tsup, biome, and node:test ([abafadc](https://github.com/mjancarik/to-mock/commit/abafadc21632d3e7a3f11b521f07a36ebec38124))
+* remove default export ([dca9332](https://github.com/mjancarik/to-mock/commit/dca93325d700bee49f8aaff0287dc74337834437))
+
+
+### BREAKING CHANGES
+
+* default export removed — use named import `{ toMock }`.objectKeepUnmock is now the
+default global predicate; callsetGlobalKeepUnmock(null) to restore v1 behaviour.
 <a name="1.6.2"></a>
 ## [1.6.2](https://github.com/mjancarik/to-mock/compare/1.6.1...1.6.2) (2020-02-14)
 

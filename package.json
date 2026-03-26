@@ -1,6 +1,6 @@
 {
   "name": "to-mock",
-  "version": "1.6.2",
+  "version": "2.0.0",
   "description": "The utility to mock class and objects. You can use mocked classes and objects for your unit and integration tests",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
