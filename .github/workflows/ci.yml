@@ -21,7 +21,7 @@ jobs:
 
       - name: Cache node_modules
         id: cache-modules
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: |
             node_modules
@@ -42,7 +42,7 @@ jobs:
           node-version: 24
 
       - name: Load node_modules from cache
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: |
             node_modules
@@ -58,7 +58,7 @@ jobs:
         run: npm run build
 
       - name: Cache dist
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: dist/
           key: ${{ runner.os }}-dist-${{ github.sha }}
@@ -81,14 +81,14 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Load node_modules from cache
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: |
             node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('package.json') }}
           
       - name: Load dist from cache
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: dist/
           key: ${{ runner.os }}-dist-${{ github.sha }}
@@ -111,7 +111,7 @@ jobs:
           node-version: 24
 
       - name: Load node_modules from cache
-        uses: actions/cache@v6
+        uses: actions/cache@v4
         with:
           path: |
             node_modules
